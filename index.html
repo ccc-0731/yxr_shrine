@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>于神庙</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="赛博烧香 · 抽签求运 · 仅供娱乐" />
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="title">于神庙</h1>
+    <p class="subtitle">赛博烧香 · 抽签求运 · 仅供娱乐</p>
+  </header>
+
+  <main class="container">
+    <section class="panel incense-panel">
+      <h2>烧香区</h2>
+      <div class="stats">
+        <div>香火次数：<span id="incenseCount">0</span></div>
+        <div>功德 / 祝福：<span id="blessing">0</span></div>
+      </div>
+
+      <div class="incense-area" id="incenseArea">
+        <button id="burnBtn" class="big-btn">点香（烧香）</button>
+        <div id="toast" class="toast">欢迎来到于神庙</div>
+        <div class="animation-stage" id="animationStage"></div>
+      </div>
+    </section>
+
+    <section class="panel draw-panel">
+      <h2>抽签区</h2>
+      <div class="draw-controls">
+        <button id="drawBtn" class="big-btn">抽签</button>
+        <div class="draw-count">抽签次数：<span id="drawCount">0</span></div>
+      </div>
+
+      <div id="fortuneCard" class="fortune-card empty">
+        <div class="fortune-level" id="fortuneLevel">—</div>
+        <div class="fortune-text" id="fortuneText">抽一签，试试手气</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="controls">
+      <button id="resetBtn" class="small-btn">清空进度 / 重置</button>
+    </div>
+    <p class="disclaimer">娱乐用，不保真（于神也不保真）</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
