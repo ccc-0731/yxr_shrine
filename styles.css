@@ -386,12 +386,13 @@ body::after{
 .expel{
   position:fixed;
   inset:0;
-  z-index: 60;
+  z-index: 9999;        /* ✅ 提高层级，绝不被任何 modal/backdrop 吃掉 */
   display:flex;
   align-items:center;
   justify-content:center;
   background: rgba(20,18,14,0.55);
   backdrop-filter: blur(8px);
+  pointer-events:auto;  /* ✅ 必须能接收点击 */
 }
 .expel-panel{
   width:min(520px, calc(100vw - 28px));
@@ -411,6 +412,23 @@ body::after{
   margin-top: 10px;
   opacity: 0.9;
   line-height: 1.55;
+}
+
+/* ✅ 刷新按钮：更“赎罪感”，更明显可点 */
+#refreshBtn{
+  margin-top: 14px;
+  width: 100%;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.22);
+  position: relative;
+  z-index: 10000;
+  pointer-events: auto;
+}
+#refreshBtn:hover{
+  transform: translateY(-1px);
+}
+#refreshBtn:active{
+  transform: translateY(1px);
 }
 
 /* Footer */

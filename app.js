@@ -195,6 +195,14 @@ function render() {
   // 被逐出
   if (state.expelled) {
     showExpelOverlay();
+  } else {
+    // 防止“解除逐出”后 overlay 还挂着
+    expel.classList.add('hidden');
+    expel.setAttribute('aria-hidden', 'true');
+    burnBtn.disabled = false;
+    summonBtn.disabled = false;
+    // drawBtn 是否可用还要看冷却
+    updateDrawCooldownUI();
   }
 }
 
@@ -357,7 +365,7 @@ summonBtn.addEventListener('click', () => {
   // 正常召唤：随机展示一张图
   const img = pick(SUMMON_IMAGES);
   openModal(`
-    <p>于神：你这功德……勉强够我显灵一下。</p>
+    <p>天灵灵，地灵灵，于神竟然显灵了！</p>
     <img src="${img}" alt="于神显灵图" />
     <p style="margin-top:10px;color:#6c6a5f;font-size:12px;">
     </p>
@@ -383,7 +391,7 @@ function closeModal() {
 modalBackdrop.addEventListener('click', closeModal);
 modalCloseBtn.addEventListener('click', closeModal);
 
-/** ---------- 被逐出：强制刷新 ---------- */
+/** ---------- 被逐出：强制刷新（清档重开版） ---------- */
 function showExpelOverlay() {
   expel.classList.remove('hidden');
   expel.setAttribute('aria-hidden', 'false');
@@ -393,13 +401,25 @@ function showExpelOverlay() {
   drawBtn.disabled = true;
   summonBtn.disabled = true;
 
-  // 也可以来个“自动刷新倒计时”，但你说“强制要求刷新”，我留按钮+允许手动
-  showToast('于神：你被逐出了于神庙（请刷新）。');
+  showToast('于神：你被逐出了于神庙（清档重开）。');
 }
 
-refreshBtn.addEventListener('click', () => {
-  // 强制刷新（浏览器对“强制”支持各不相同，但这就够“狠”了）
-  location.reload();
+refreshBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+
+  // ✅ 关键：清掉存档再刷新（被逐出 = 清档重开）
+  try {
+    localStorage.removeItem(LS_KEY);
+  } catch (err) {
+    console.warn('清档失败', err);
+  }
+
+  // 可选：立即给出“按下去了”的反馈
+  refreshBtn.disabled = true;
+  refreshBtn.textContent = '正在赎罪…';
+
+  // 用 replace + cache-bust，减少“看起来没刷新”的情况
+  location.replace(location.pathname + '?r=' + Date.now());
 });
 
 /** ---------- 重置 ---------- */
