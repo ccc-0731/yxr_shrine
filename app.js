@@ -21,7 +21,7 @@ const SUMMON_IMAGES = [
 const DRAW_COOLDOWN_MS = 15000;
 
 // 点香按钮小冷却，防连点刷爆
-const BURN_COOLDOWN_MS = 900;
+const BURN_COOLDOWN_MS = 300;
 
 // 香最多保留多少根（不消失，但做个上限防卡）
 const MAX_STICKS = 60;
