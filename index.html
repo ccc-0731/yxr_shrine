@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,48 +8,125 @@
   <link rel="stylesheet" href="styles.css" />
   <meta name="description" content="内卷狗叫卖菜，都不如来拜于神" />
 </head>
-<body>
-  <header class="site-header">
-    <h1 class="title">于神庙</h1>
-    <p class="subtitle">内卷狗叫卖菜，都不如来拜于神</p>
-  </header>
 
-  <main class="container">
-    <section class="panel incense-panel">
-      <h2>烧香区</h2>
-      <div class="stats">
-        <div>香火次数：<span id="incenseCount">0</span></div>
-        <div>功德 / 祝福：<span id="blessing">0</span></div>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-title">于神庙</div>
+      <div class="brand-subtitle">内卷狗叫卖菜，都不如来拜于神</div>
+    </div>
+
+    <div class="meters">
+      <div class="meter">
+        <div class="meter-label">
+          功德 <span class="mono" id="meritText">0</span>
+        </div>
+        <div class="meter-track" aria-label="功德进度">
+          <div class="meter-fill" id="meritFill"></div>
+        </div>
       </div>
 
-      <div class="incense-area" id="incenseArea">
-        <button id="burnBtn" class="big-btn">点香（烧香）</button>
-        <div id="toast" class="toast">欢迎来到于神庙</div>
-        <div class="animation-stage" id="animationStage"></div>
+      <div class="meter">
+        <div class="meter-label">
+          运势 <span class="mono" id="luckText">50</span>
+        </div>
+        <div class="meter-track" aria-label="运势进度">
+          <div class="meter-fill luck" id="luckFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button id="summonBtn" class="btn btn-wine hidden">召唤于神</button>
+      <button id="resetBtn" class="btn btn-ghost">清空进度</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 中间：烧香区 -->
+    <section class="card incense-card">
+      <div class="card-header">
+        <h2>烧香区</h2>
+        <div class="mini-stats">
+          <span>香火：<span class="mono" id="incenseCount">0</span></span>
+          <span class="dot">•</span>
+          <span>提示：烧香可以涨功德</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="action-row">
+          <button id="burnBtn" class="btn btn-green btn-big">点香（烧香）</button>
+          <div id="toast" class="toast" role="status" aria-live="polite">欢迎来到于神庙</div>
+        </div>
+
+        <div class="incense-stage-wrap">
+          <div class="stage-title">香炉台（香不会消失）</div>
+          <div id="incenseStage" class="incense-stage" aria-label="香炉台"></div>
+        </div>
       </div>
     </section>
 
-    <section class="panel draw-panel">
-      <h2>抽签区</h2>
-      <div class="draw-controls">
-        <button id="drawBtn" class="big-btn">抽签</button>
-        <div class="draw-count">抽签次数：<span id="drawCount">0</span></div>
+    <!-- 下方：抽签区 -->
+    <section class="card draw-card">
+      <div class="card-header">
+        <h2>抽签区</h2>
+        <div class="mini-stats">
+          <span>抽签：<span class="mono" id="drawCount">0</span></span>
+          <span class="dot">•</span>
+          <span>规则：每次抽签消耗 <b>10</b> 功德</span>
+        </div>
       </div>
 
-      <div id="fortuneCard" class="fortune-card empty">
-        <div class="fortune-level" id="fortuneLevel">—</div>
-        <div class="fortune-text" id="fortuneText">抽签，试试手气</div>
+      <div class="card-body">
+        <div class="action-row">
+          <button id="drawBtn" class="btn btn-wine btn-big">抽签（-10功德）</button>
+          <div class="cooldown" id="cooldownHint">冷却：就绪</div>
+        </div>
+
+        <div id="fortuneCard" class="fortune-card empty">
+          <div class="fortune-top">
+            <div class="fortune-level" id="fortuneLevel">—</div>
+            <div class="fortune-tag" id="fortuneTag">未抽签</div>
+          </div>
+          <div class="fortune-text" id="fortuneText">抽一签，试试手气。</div>
+          <div class="fortune-footer">
+            <span class="mono" id="fortuneDelta">影响：—</span>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="controls">
-      <button id="resetBtn" class="small-btn">清空进度 / 重置</button>
+  <!-- 召唤弹窗 -->
+  <div id="modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-label="召唤于神结果">
+      <div class="modal-title">于神显灵</div>
+      <div class="modal-content" id="modalContent">
+        <!-- 动态插入 -->
+      </div>
+      <div class="modal-actions">
+        <button id="modalCloseBtn" class="btn btn-green">收下神谕</button>
+      </div>
     </div>
-    <p class="disclaimer">科学程度0%</p>
+  </div>
+
+  <!-- 被逐出覆盖层 -->
+  <div id="expel" class="expel hidden" aria-hidden="true">
+    <div class="expel-panel">
+      <div class="expel-title">你被逐出了于神庙</div>
+      <div class="expel-text">你先去反省一下内卷之心，然后刷新重来。</div>
+      <button id="refreshBtn" class="btn btn-wine btn-big">立即刷新（赎罪）</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-left">玄学程度 100%</div>
+    <div class="footer-right">✨ Version 1.2 · Made by ccc, 于神十八大寿快乐！</div>
   </footer>
 
   <script src="app.js"></script>
 </body>
+
 </html>
